@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class AutApplication {
 
-	public static final String REST_BASE_URI = "http://localhost:8080/eye-tracking-api/";
+	public static final String REST_BASE_URI = "http://localhost:8080/aut-api/";
 
 	static RestTemplate restTemplate = new RestTemplate();
 
