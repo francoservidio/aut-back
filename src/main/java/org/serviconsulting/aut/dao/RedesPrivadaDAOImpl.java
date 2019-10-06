@@ -1,6 +1,8 @@
 package org.serviconsulting.aut.dao;
 
+import org.serviconsulting.aut.model.Dispositivo;
 import org.serviconsulting.aut.model.RedesPrivada;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -18,6 +20,9 @@ import com.jcraft.jsch.Session;
 public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    DispositivoDAO dispositivoDAO;
 
     @Override
     public void createRedesPrivada(RedesPrivada redesPrivada) {
@@ -48,24 +53,31 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
     }
 
     @Override
-    public void connectToDevices(List<Long> devices, RedesPrivada redPrivada){
-        String host="10.20.200.23";
+    public void connectToDevices(List<Long> devices, Long id){
+        RedesPrivada redesPrivada = entityManager.find(RedesPrivada.class, id);
+        Dispositivo dis = entityManager.find(Dispositivo.class, devices.get(0));
+        String ipDispositivo = dis.getIp();
+
+        //String host="10.20.200.23";
         String user="admin_fservidio";
         String password="tuvieja";
+
 
         try{
 
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            Session session=jsch.getSession(user, host, 22);
+            Session session=jsch.getSession(user, ipDispositivo, 22);
             session.setPassword(password);
             session.setConfig(config);
             session.connect();
             System.out.println("Connected");
 
             Channel channel=session.openChannel("exec");
-            ((ChannelExec)channel).setCommand("show running-config");
+            ((ChannelExec)channel).setCommand("configure terminal");
+            ((ChannelExec)channel).setCommand("vlan " + redesPrivada.getTagVlan());
+            ((ChannelExec)channel).setCommand("name " + redesPrivada.getNombreVlan());
             channel.setInputStream(null);
             ((ChannelExec)channel).setErrStream(System.err);
 
