@@ -14,7 +14,14 @@ public class RedesPrivadaController {
     @Autowired
     private RedesPrivadaDAO redesPrivadaDAO;
 
-    @RequestMapping(value="/redesprivadas", method= RequestMethod.POST,
+    @RequestMapping(value="/redesprivadas/{id}/connect", method= RequestMethod.POST,
+            produces="application/json", consumes="application/json")
+    public void createRedesPrivada(@RequestBody List<Long> dispositivosIds, @PathVariable("id") long id)
+    {
+        redesPrivadaDAO.connectToDevices(dispositivosIds, id);
+    }
+
+    @RequestMapping(value="/redesprivadas/", method= RequestMethod.POST,
             produces="application/json", consumes="application/json")
     public void createRedesPrivada(@RequestBody RedesPrivada redesPrivada)
     {

@@ -16,6 +16,6 @@ public interface RedesPrivadaDAO {
 
     public void deleteRedesPrivada(Long id);
 
-    public void connectToDevices(List<Long> devices, RedesPrivada redPrivada);
+    public void connectToDevices(List<Long> devices, Long id);
 
 }
