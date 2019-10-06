@@ -1,5 +1,6 @@
 package org.serviconsulting.aut.dao;
 
+import com.jcraft.jsch.*;
 import org.serviconsulting.aut.model.Dispositivo;
 import org.serviconsulting.aut.model.RedesPrivada;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
 
 @Service
 @Transactional
@@ -54,13 +53,13 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
 
     @Override
     public void connectToDevices(List<Long> devices, Long id){
-        RedesPrivada redesPrivada = entityManager.find(RedesPrivada.class, id);
-        Dispositivo dis = entityManager.find(Dispositivo.class, devices.get(0));
-        String ipDispositivo = dis.getIp();
+        //RedesPrivada redesPrivada = entityManager.find(RedesPrivada.class, id);
+        //Dispositivo dis = entityManager.find(Dispositivo.class, devices.get(0));
+        //String ipDispositivo = dis.getIp();
 
-        //String host="10.20.200.23";
+        String host="10.20.200.23";
         String user="admin_fservidio";
-        String password="tuvieja";
+        String password="";
 
 
         try{
@@ -68,21 +67,24 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            Session session=jsch.getSession(user, ipDispositivo, 22);
+            Session session=jsch.getSession(user, host, 22);
             session.setPassword(password);
             session.setConfig(config);
             session.connect();
             System.out.println("Connected");
 
-            Channel channel=session.openChannel("exec");
-            ((ChannelExec)channel).setCommand("configure terminal");
-            ((ChannelExec)channel).setCommand("vlan " + redesPrivada.getTagVlan());
-            ((ChannelExec)channel).setCommand("name " + redesPrivada.getNombreVlan());
-            channel.setInputStream(null);
-            ((ChannelExec)channel).setErrStream(System.err);
+            Channel channel = session.openChannel("shell");
+            OutputStream ops = channel.getOutputStream();
+            PrintStream ps = new PrintStream(ops, true);
+
+            channel.connect();
+            ps.println("configure terminal");
+            ps.println("vlan 3800");
+            ps.println("name sarasa");
+            //give commands to be executed inside println.and can have any no of commands sent.
+            ps.close();
 
             InputStream in=channel.getInputStream();
-            channel.connect();
             byte[] tmp=new byte[1024];
             while(true){
                 while(in.available()>0){
@@ -96,6 +98,7 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
                 }
                 try{Thread.sleep(1000);}catch(Exception ee){}
             }
+
             channel.disconnect();
             session.disconnect();
             System.out.println("DONE");

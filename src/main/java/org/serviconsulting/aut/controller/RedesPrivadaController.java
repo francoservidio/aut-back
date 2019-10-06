@@ -16,7 +16,7 @@ public class RedesPrivadaController {
 
     @RequestMapping(value="/redesprivadas/{id}/connect", method= RequestMethod.POST,
             produces="application/json", consumes="application/json")
-    public void createRedesPrivada(@RequestBody List<Long> dispositivosIds, @PathVariable("id") long id)
+    public void connectToDevices(@RequestBody List<Long> dispositivosIds, @PathVariable("id") long id)
     {
         redesPrivadaDAO.connectToDevices(dispositivosIds, id);
     }
