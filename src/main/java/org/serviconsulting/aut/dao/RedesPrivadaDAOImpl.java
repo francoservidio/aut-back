@@ -54,13 +54,18 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
     @Override
     public void connectToDevices(List<Long> devices, Long id){
         //RedesPrivada redesPrivada = entityManager.find(RedesPrivada.class, id);
+        RedesPrivada red= new RedesPrivada();
         //Dispositivo dis = entityManager.find(Dispositivo.class, devices.get(0));
+        Dispositivo dis = new Dispositivo();
+        String host = dis.getIp();
+        String vlan =red.getTagVlan();
+        String NombreVlan = red.getNombreVlan();
+
         //String ipDispositivo = dis.getIp();
 
-        String host="10.20.200.23";
+        //String host="10.20.200.23";
         String user="admin_fservidio";
         String password="";
-
 
         try{
 

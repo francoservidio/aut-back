@@ -19,8 +19,8 @@ public class AutApplication {
 		SpringApplication.run(AutApplication.class, args);
 		RedesPrivadaDAOImpl redesPrivadaDAO = new RedesPrivadaDAOImpl();
 
-		List<Long> devices = new ArrayList<>();
+		/*List<Long> devices = new ArrayList<>();
 		devices.add(new Long(161));
-		redesPrivadaDAO.connectToDevices(devices,new Long(3800));
+		redesPrivadaDAO.connectToDevices(devices,new Long(3800));*/
 	}
 }
