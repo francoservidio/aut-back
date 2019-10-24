@@ -16,4 +16,8 @@ public interface DispositivoDAO {
 
     public void deleteDispositivo(Long id);
 
+    public void backupDevices(String host);
+
+    public boolean isReachable( String host);
+
 }
