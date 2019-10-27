@@ -46,6 +46,7 @@ public class DispositivoDAOImpl implements DispositivoDAO{
     @Override
     public Dispositivo updateDispositivo(Dispositivo dispositivo) {
         entityManager.merge(dispositivo);
+        backupDevices(dispositivo.getIp());
         return dispositivo;
     }
 
