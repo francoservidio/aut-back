@@ -52,18 +52,14 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
     }
 
     @Override
-    public void connectToDevices(List<Long> devices, Long id){
-        //RedesPrivada redesPrivada = entityManager.find(RedesPrivada.class, id);
-        RedesPrivada red= new RedesPrivada();
-        //Dispositivo dis = entityManager.find(Dispositivo.class, devices.get(0));
-        Dispositivo dis = new Dispositivo();
+    public void connectToDevices(Long id, Long deviceId){
+        RedesPrivada red = entityManager.find(RedesPrivada.class, id);
+        Dispositivo dis = entityManager.find(Dispositivo.class, deviceId);
         String host = dis.getIp();
         String vlan =red.getTagVlan();
         String NombreVlan = red.getNombreVlan();
 
-        //String ipDispositivo = dis.getIp();
 
-        //String host="10.20.200.23";
         String user="admin_fservidio";
         String password="";
 
@@ -84,8 +80,8 @@ public class RedesPrivadaDAOImpl implements RedesPrivadaDAO{
 
             channel.connect();
             ps.println("configure terminal");
-            ps.println("vlan 3800");
-            ps.println("name sarasa");
+            ps.println("vlan " + vlan);
+            ps.println("name " + NombreVlan);
             //give commands to be executed inside println.and can have any no of commands sent.
             ps.close();
 

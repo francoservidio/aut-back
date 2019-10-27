@@ -40,7 +40,11 @@ public class DispositivoDAOImpl implements DispositivoDAO{
 
     @Override
     public List<Dispositivo> getAllDispositivos() {
-        return entityManager.createQuery("select dis from Dispositivo dis").getResultList();
+        List<Dispositivo> dispositivos = entityManager.createQuery("select dis from Dispositivo dis").getResultList();
+        for (Dispositivo d: dispositivos) {
+            d.setStatus(this.isReachable(d.getIp()));
+        }
+        return dispositivos;
     }
 
     @Override

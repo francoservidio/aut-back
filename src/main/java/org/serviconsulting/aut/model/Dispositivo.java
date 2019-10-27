@@ -1,5 +1,7 @@
 package org.serviconsulting.aut.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -25,6 +27,10 @@ public class Dispositivo implements Serializable {
 
     @Column(name = "DESCRIPTION")
     private String descripcion;
+
+    @Column(name="STATUS")
+    @Type(type = "numeric_boolean")
+    private Boolean status;
 
     @Column(name = "FECHA_CREACION")
     private Date fechaDate;
@@ -97,6 +103,14 @@ public class Dispositivo implements Serializable {
         this.fechaDate = fechaDate;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
     public Date getFechaUltimaModificacion() {
         return fechaUltimaModificacion;
     }
@@ -104,4 +118,6 @@ public class Dispositivo implements Serializable {
     public void setFechaUltimaModificacion(Date fechaUltimaModificacion) {
         this.fechaUltimaModificacion = fechaUltimaModificacion;
     }
+
+
 }
