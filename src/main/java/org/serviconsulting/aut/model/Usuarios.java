@@ -1,6 +1,10 @@
 package org.serviconsulting.aut.model;
 
 
+
+
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +20,7 @@ public class Usuarios implements Serializable {
     private Long id;
 
     @Column(name="NOMBRE_USUARIO")
-    private String nombre;
+    private String nombreUsuario;
 
     @Column(name = "EMAIL")
     private String email;
@@ -24,11 +28,17 @@ public class Usuarios implements Serializable {
     @Column(name = "PASSWORD")
     private String password;
 
+    @Column(name= "ES_ADMIN")
+    @Type(type = "numeric_boolean")
+    private Boolean esAdmin;
+
     @Column(name = "FECHA_CREACION")
     private Date fechaCreacion;
 
     @Column(name = "FECHA_ULTIMA_MODIFICACION")
     private Date fechaUltimaModificacion;
+
+
 
 
     public Usuarios() {
@@ -59,13 +69,12 @@ public class Usuarios implements Serializable {
         this.id = id;
     }
 
-
-    public String getNombre() {
-        return nombre;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
 
-    public void setnombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
     public String getEmail() {
@@ -82,6 +91,14 @@ public class Usuarios implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getEsAdmin() {
+        return esAdmin;
+    }
+
+    public void setEsAdmin(Boolean esAdmin) {
+        this.esAdmin = esAdmin;
     }
 
     public Date getFechaCreacion() {
