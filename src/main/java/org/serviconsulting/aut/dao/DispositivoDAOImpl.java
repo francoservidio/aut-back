@@ -29,7 +29,8 @@ public class DispositivoDAOImpl implements DispositivoDAO{
     public void createDispositivo(Dispositivo dispositivo) {
         entityManager.persist(dispositivo);
         entityManager.flush();
-        backupDevices(dispositivo.getIp());
+        //backupDevices(dispositivo.getIp());
+        //logsDevices(dispositivo.getIp());
 
     }
 
@@ -50,7 +51,8 @@ public class DispositivoDAOImpl implements DispositivoDAO{
     @Override
     public Dispositivo updateDispositivo(Dispositivo dispositivo) {
         entityManager.merge(dispositivo);
-        backupDevices(dispositivo.getIp());
+        //backupDevices(dispositivo.getIp());
+        //logsDevices(dispositivo.getIp());
         return dispositivo;
     }
 
@@ -59,11 +61,11 @@ public class DispositivoDAOImpl implements DispositivoDAO{
         Dispositivo dispositivo = entityManager.find(Dispositivo.class, id);
         entityManager.remove(dispositivo);
     }
-
+    @Override
     public void backupDevices(String host) {
 
         String user="admin_fservidio";
-        String password="";
+        String password="Barcelona.12";
 
         try {
 
@@ -112,6 +114,47 @@ public class DispositivoDAOImpl implements DispositivoDAO{
             return false;
 
         }
+    }
+
+    @Override
+    public void logsDevices(String host) {
+        //http-server -p 8081
+
+        String user="admin_fservidio";
+        String password="Barcelona.12";
+
+        try {
+
+            Properties config = new Properties();
+            config.put("StrictHostKeyChecking", "no");
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(user, host, 22);
+            session.setPassword(password);
+            session.setConfig(config);
+            session.connect();
+            System.out.println("Connected");
+
+
+            ChannelExec channel=(ChannelExec) session.openChannel("exec");
+            BufferedReader in=new BufferedReader(new InputStreamReader(channel.getInputStream()));
+            channel.setCommand("show logging\n");
+            channel.connect();
+            PrintStream fileStream = new PrintStream(host + "log.txt");
+            System.setOut(fileStream);
+            String msg=null;
+            while((msg=in.readLine())!=null){
+                System.out.println(msg);
+            }
+
+            channel.disconnect();
+            session.disconnect();
+
+            System.out.println("DONE");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
 }
